@@ -1,6 +1,7 @@
 package dt05;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created with IntelliJ IDEA.
@@ -32,6 +33,7 @@ public class Micro4442 {
     public final static int JUMP_IF_NOT = 15;
 
     private boolean haltFlag = false;
+    private boolean loop = false;
 
     private ArrayList<Cmd> commands = new ArrayList<Cmd>();
 
@@ -62,7 +64,7 @@ public class Micro4442 {
         commands.add(new JumpIfNot());      //15
     }
 
-    void resetMem(){
+    public void resetMem(){
         for(int i = 0; i < MEM_COUNT; i++){
             memAddress[i] = HALT;
         }
@@ -70,9 +72,33 @@ public class Micro4442 {
         R0 = HALT;
         R1 = HALT;
         steps = 0;
+        haltFlag = false;
+        loop = false;
     }
 
-    void performAction(){
+    public void fullRun(){
+        Micro4442 hare = new Micro4442();
+        hare.setMemAddress(memAddress);
+        while(!haltFlag && !loop){
+            hare.performAction();
+            hare.performAction();
+            performAction();
+            loop = loopCheck(hare);
+        }
+    }
+
+    private boolean loopCheck(Micro4442 hare) {
+        boolean check = true;
+
+        if(!Arrays.equals(hare.getMemAddress(),memAddress) || hare.getPC() != PC
+                || hare.getR0() != R0 || hare.getR1() != R1){
+            check = false;
+        }
+
+        return check;
+    }
+
+    public void performAction(){
         Cmd command = commands.get(memAddress[PC]);
         command.run();
         steps++;
@@ -101,6 +127,10 @@ public class Micro4442 {
         } else {
             System.out.println("Can't input mismatched memory count");
         }
+    }
+
+    public void setMemAddress(int[] memAddress) {
+        this.memAddress = memAddress;
     }
 
     public char intToHexadeci(int number) {
@@ -136,6 +166,7 @@ public class Micro4442 {
         }
         void run(){
             haltFlag = true;
+            incrementPC();
         }
     }
 
@@ -317,7 +348,7 @@ public class Micro4442 {
         PC %= MEM_COUNT;
     }
 
-    private void printState(){
+    public void printState(){
 
         System.out.printf("|---------------------------|\n");
         System.out.printf("||--------||---------------||\n");
@@ -336,7 +367,7 @@ public class Micro4442 {
         System.out.printf("|          | %c | %c | %c | %c ||\n", intToHexadeci(memAddress[12]),
                 intToHexadeci(memAddress[13]), intToHexadeci(memAddress[14]),
                 intToHexadeci(memAddress[15]));
-        System.out.printf("|  i = %-2d  |---------------||\n", PC);
+        System.out.printf("| PC = %-2d  |---------------||\n", PC);
         System.out.printf("|  s = %-8d             |\n", steps);
         System.out.printf("|---------------------------|\n");
     }
@@ -355,5 +386,9 @@ public class Micro4442 {
 
     public int[] getMemAddress() {
         return memAddress;
+    }
+
+    public boolean isLoop() {
+        return loop;
     }
 }
