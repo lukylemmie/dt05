@@ -12,6 +12,16 @@ import java.awt.event.ActionListener;
  * To change this template use File | Settings | File Templates.
  */
 public class GUI extends JFrame {
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                GUI gui = new GUI();
+                gui.setVisible(true);
+            }
+        });
+    }
+
     public GUI() {
         initUI();
     }
@@ -40,14 +50,5 @@ public class GUI extends JFrame {
         setSize(300, 200);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                GUI gui = new GUI();
-                gui.setVisible(true);
-            }
-        });
     }
 }

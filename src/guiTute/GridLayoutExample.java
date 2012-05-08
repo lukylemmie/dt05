@@ -6,6 +6,18 @@ import java.awt.*;
 
 public class GridLayoutExample extends JFrame {
 
+    public static void main(String[] args) {
+
+        SwingUtilities.invokeLater(new Runnable() {
+
+            public void run() {
+
+                GridLayoutExample ex = new GridLayoutExample();
+                ex.setVisible(true);
+            }
+        });
+    }
+
     public GridLayoutExample() {
 
         initUI();
@@ -38,17 +50,5 @@ public class GridLayoutExample extends JFrame {
         setSize(350, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-    }
-
-    public static void main(String[] args) {
-
-        SwingUtilities.invokeLater(new Runnable() {
-
-            public void run() {
-
-                GridLayoutExample ex = new GridLayoutExample();
-                ex.setVisible(true);
-            }
-        });
     }
 }
